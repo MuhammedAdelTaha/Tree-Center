@@ -99,11 +99,13 @@ public class Main{
         }
         return graph1Encoding.equals(graph2Encoding);
     }
-    public static void addUndirectedEdge(HashMap<Integer, ArrayList<Integer>> graph, Integer vertex1, Integer vertex2){
+    public static boolean addUndirectedEdge(HashMap<Integer, ArrayList<Integer>> graph, Integer vertex1, Integer vertex2){
+        if(graph.containsKey(vertex1) && graph.containsKey(vertex2)) return false;
         if(!graph.containsKey(vertex1)) graph.put(vertex1, new ArrayList<>());
         if(!graph.containsKey(vertex2)) graph.put(vertex2, new ArrayList<>());
         graph.get(vertex1).add(vertex2);
         graph.get(vertex2).add(vertex1);
+        return true;
     }
     public static HashMap<Integer, ArrayList<Integer>> cloneGraph(HashMap<Integer, ArrayList<Integer>> graph){
         HashMap<Integer, ArrayList<Integer>> clonedGraph = new HashMap<>();
@@ -118,8 +120,9 @@ public class Main{
     }
     public static void main(String[] args) {
         // Centers are 2
-        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>(9);
+        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
         addUndirectedEdge(graph, 0, 1);
+        addUndirectedEdge(graph, 2, 1);
         addUndirectedEdge(graph, 2, 1);
         addUndirectedEdge(graph, 2, 3);
         addUndirectedEdge(graph, 3, 4);
@@ -130,29 +133,29 @@ public class Main{
         solve(graph);
 
         // Centers are 0
-        HashMap<Integer, ArrayList<Integer>> graph2 = new HashMap<>(1);
+        HashMap<Integer, ArrayList<Integer>> graph2 = new HashMap<>();
         solve(graph2);
 
         // Centers are 0,1
-        HashMap<Integer, ArrayList<Integer>> graph3 = new HashMap<>(2);
+        HashMap<Integer, ArrayList<Integer>> graph3 = new HashMap<>();
         addUndirectedEdge(graph3, 0, 1);
         solve(graph3);
 
         // Centers are 1
-        HashMap<Integer, ArrayList<Integer>> graph4 = new HashMap<>(3);
+        HashMap<Integer, ArrayList<Integer>> graph4 = new HashMap<>();
         addUndirectedEdge(graph4, 0, 1);
         addUndirectedEdge(graph4, 1, 2);
         solve(graph4);
 
         // Centers are 1,2
-        HashMap<Integer, ArrayList<Integer>> graph5 = new HashMap<>(4);
+        HashMap<Integer, ArrayList<Integer>> graph5 = new HashMap<>();
         addUndirectedEdge(graph5, 0, 1);
         addUndirectedEdge(graph5, 1, 2);
         addUndirectedEdge(graph5, 2, 3);
         solve(graph5);
 
         // Centers are 2,3
-        HashMap<Integer, ArrayList<Integer>> graph6 = new HashMap<>(7);
+        HashMap<Integer, ArrayList<Integer>> graph6 = new HashMap<>();
         addUndirectedEdge(graph6, 0, 1);
         addUndirectedEdge(graph6, 1, 2);
         addUndirectedEdge(graph6, 2, 3);
@@ -162,7 +165,7 @@ public class Main{
         solve(graph6);
 
         // Trees Isomorphism
-        HashMap<Integer, ArrayList<Integer>> graph9 = new HashMap<>(9);
+        HashMap<Integer, ArrayList<Integer>> graph9 = new HashMap<>();
         addUndirectedEdge(graph9, 9, 1);
         addUndirectedEdge(graph9, 9, 4);
         addUndirectedEdge(graph9, 9, 15);
@@ -171,7 +174,7 @@ public class Main{
         addUndirectedEdge(graph9, 2, 1);
         addUndirectedEdge(graph9, 5, 1);
         addUndirectedEdge(graph9, 6, 4);
-        HashMap<Integer, ArrayList<Integer>> graph10 = new HashMap<>(9);
+        HashMap<Integer, ArrayList<Integer>> graph10 = new HashMap<>();
         addUndirectedEdge(graph10, 0, 1);
         addUndirectedEdge(graph10, 1, 2);
         addUndirectedEdge(graph10, 2, 3);
