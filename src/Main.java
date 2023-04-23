@@ -1,22 +1,21 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main{
 
-    public static void findAllCenters(HashMap<Integer, ArrayList<Integer>> graph){
+    public static Integer findAllCenters(HashMap<Integer, ArrayList<Integer>> graph){
         final int n = graph.size();
         int remainingNodes = n;
         ArrayList<Integer> centers = new ArrayList<>();
         HashMap<Integer, ArrayList<Integer>> currentLeaves = new HashMap<>();
         if(n == 0){
             System.out.println("No Centers, The graph is empty");
-            return;
+            return null;
         }
         else if(n == 1 || n == 2){
             System.out.println("Centers are " + graph.keySet());
-            return;
+            return graph.keySet().iterator().next();
         }
         while(true){
             currentLeaves.clear();
@@ -41,10 +40,19 @@ public class Main{
                     if(i != remainingNodes - 1) System.out.print(", ");
                 }
                 System.out.println("]");
-                break;
+                return centers.get(0);
             }
         }
 
+    }
+    public static void rootGraph(HashMap<Integer, ArrayList<Integer>> graph, Integer root){
+        if(root == null) return;
+        ArrayList<Integer> rootChildren = graph.get(root);
+        int size = rootChildren.size();
+        for(int i = 0; i < size; i++){
+            graph.get(rootChildren.get(i)).remove(root);
+            rootGraph(graph, rootChildren.get(i));
+        }
     }
     public static void addUndirectedEdge(HashMap<Integer, ArrayList<Integer>> graph, Integer vertex1, Integer vertex2){
         if(!graph.containsKey(vertex1)) graph.put(vertex1, new ArrayList<>());
@@ -52,7 +60,23 @@ public class Main{
         graph.get(vertex1).add(vertex2);
         graph.get(vertex2).add(vertex1);
     }
+    public static void cloneGraph(HashMap<Integer, ArrayList<Integer>> graph,
+                                  HashMap<Integer, ArrayList<Integer>> clonedGraph){
+        clonedGraph.clear();
+        for (Map.Entry<Integer, ArrayList<Integer>> node : graph.entrySet()){
+            clonedGraph.put(node.getKey(), (ArrayList<Integer>) node.getValue().clone());
+        }
+    }
+    public static void solve(HashMap<Integer, ArrayList<Integer>> graph,
+                             HashMap<Integer, ArrayList<Integer>> clonedGraph){
+        cloneGraph(graph, clonedGraph);
+        rootGraph(graph, findAllCenters(clonedGraph));
+        System.out.println(graph);
+    }
     public static void main(String[] args) {
+
+        HashMap<Integer, ArrayList<Integer>> clonedGraph = new HashMap<>();
+
         // Centers are 2
         HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>(9);
         addUndirectedEdge(graph, 0, 1);
@@ -63,29 +87,29 @@ public class Main{
         addUndirectedEdge(graph, 2, 6);
         addUndirectedEdge(graph, 6, 7);
         addUndirectedEdge(graph, 6, 8);
-        findAllCenters(graph);
+        solve(graph, clonedGraph);
 
         // Centers are 0
         HashMap<Integer, ArrayList<Integer>> graph2 = new HashMap<>(1);
-        findAllCenters(graph2);
+        solve(graph2, clonedGraph);
 
         // Centers are 0,1
         HashMap<Integer, ArrayList<Integer>> graph3 = new HashMap<>(2);
         addUndirectedEdge(graph3, 0, 1);
-        findAllCenters(graph3);
+        solve(graph3, clonedGraph);
 
         // Centers are 1
         HashMap<Integer, ArrayList<Integer>> graph4 = new HashMap<>(3);
         addUndirectedEdge(graph4, 0, 1);
         addUndirectedEdge(graph4, 1, 2);
-        findAllCenters(graph4);
+        solve(graph4, clonedGraph);
 
         // Centers are 1,2
         HashMap<Integer, ArrayList<Integer>> graph5 = new HashMap<>(4);
         addUndirectedEdge(graph5, 0, 1);
         addUndirectedEdge(graph5, 1, 2);
         addUndirectedEdge(graph5, 2, 3);
-        findAllCenters(graph5);
+        solve(graph5, clonedGraph);
 
         // Centers are 2,3
         HashMap<Integer, ArrayList<Integer>> graph6 = new HashMap<>(7);
@@ -95,6 +119,6 @@ public class Main{
         addUndirectedEdge(graph6, 3, 4);
         addUndirectedEdge(graph6, 4, 5);
         addUndirectedEdge(graph6, 4, 6);
-        findAllCenters(graph6);
+        solve(graph6, clonedGraph);
     }
 }
