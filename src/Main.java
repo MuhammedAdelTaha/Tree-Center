@@ -1,17 +1,18 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main{
 
-    public static Integer findCenter(HashMap<Integer, ArrayList<Integer>> graph){
+    public static List<Integer> findAllCenters(HashMap<Integer, ArrayList<Integer>> graph){
         final int n = graph.size();
         int remainingNodes = n;
-        ArrayList<Integer> centers = new ArrayList<>();
+        List<Integer> centers = new ArrayList<>();
         HashMap<Integer, ArrayList<Integer>> currentLeaves = new HashMap<>();
 
-        if(n == 0) return null;
-        else if(n == 1 || n == 2) return graph.keySet().iterator().next();
+        if(n == 0) return centers;
+        else if(n == 1 || n == 2) return graph.keySet().stream().toList();
 
         while(true){
             currentLeaves.clear();
@@ -29,7 +30,7 @@ public class Main{
                 leaf.getValue().clear();
                 remainingNodes--;
             }
-            if (remainingNodes == 1 || remainingNodes == 2) return centers.get(0);
+            if (remainingNodes == 1 || remainingNodes == 2) return centers;
         }
     }
     public static void rootGraph(HashMap<Integer, ArrayList<Integer>> graph, Integer root){
@@ -56,7 +57,12 @@ public class Main{
     public static void solve(HashMap<Integer, ArrayList<Integer>> graph,
                              HashMap<Integer, ArrayList<Integer>> clonedGraph){
         cloneGraph(graph, clonedGraph);
-        rootGraph(graph, findCenter(clonedGraph));
+        List<Integer> centers = findAllCenters(clonedGraph);
+        if(centers.isEmpty()){
+            rootGraph(graph, null);
+        }else{
+            rootGraph(graph, centers.get(0));
+        }
         System.out.println(graph);
     }
     public static void main(String[] args) {
